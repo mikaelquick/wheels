@@ -34,9 +34,11 @@ const L1_TERRAIN = [
 
 const L2_TERRAIN = [
   [-40, 0], [8, 0],
-  [10, 0.7],                 // kicker
+  [10, 0.9],                 // kicker
   [10.2, -3.5], [15, -3.5],  // spike pit: 4.8 m
-  [15.2, 0.4], [24, 0.4],
+  // The landing lip has to sit BELOW the launch lip, or the jump is asking you
+  // to still be climbing when you get there.
+  [15.2, 0.55], [19, 0.45], [24, 0.4],
   ...strip(24, 38, 1, (x) => 0.4 + 1.3 * Math.sin(((x - 24) / 7) * Math.PI)),
   [40, 0.4], [50, 0.4],
   [58, 2.4], [66, 2.4],      // 14-degree climb onto the gantry

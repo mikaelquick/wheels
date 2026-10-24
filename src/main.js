@@ -244,33 +244,17 @@ function handleEdgeInput() {
   if (game.state !== 'playing' || dad.dead) return;
 
   if (input.hit('eject')) {
+    // Bailing out is one-way, like the original. Grips otherwise look after
+    // themselves and tear loose when the limb holding on takes enough damage.
     dad.release();
     const torso = dad.parts.get('torso');
     if (torso && !torso.severed) {
       torso.body.applyImpulse({ x: 0, y: 9 * torso.body.mass() }, true);
     }
   }
-  for (const tag of ['hands', 'feet']) {
-    const key = tag === 'hands' ? 'hands' : 'feet';
-    if (!input.hit(key)) continue;
-    if (dad.hasGrip(tag)) {
-      dad.release(tag);
-    } else {
-      // Re-grab, but only if the limb is still attached and actually close by.
-      const target = tag === 'hands' ? bike.point('handlebar') : bike.point('pedal');
-      for (const name of tag === 'hands' ? ['lowerArmF', 'lowerArmB'] : ['lowerLegF', 'lowerLegB']) {
-        const part = dad.parts.get(name);
-        if (!part || part.severed) continue;
-        const a = part.body.rotation();
-        const t = part.body.translation();
-        const hx = t.x - Math.sin(a) * part.halfLen;
-        const hy = t.y + Math.cos(a) * part.halfLen;
-        if (Math.hypot(hx - target.x, hy - target.y) < 0.45) dad.attach(name, bike.frame, target, tag);
-      }
-    }
-  }
 }
 
+// Drives the saw drone: the nearest blade sets how loud the buzzing is.
 function nearestSawDistance() {
   if (!level.saws.length) return null;
   const c = dad.centroid();
@@ -380,7 +364,9 @@ function frame(now) {
   handleEdgeInput();
   input.endFrame();
 
-  game.slow = input.down('slowmo') || game.deathSlow > 0;
+  // Slow motion is automatic on death only — it is a reward for the carnage,
+  // not another key to remember.
+  game.slow = game.deathSlow > 0;
   if (game.deathSlow > 0) game.deathSlow -= real;
   const scale = game.slow ? 0.28 : 1;
 

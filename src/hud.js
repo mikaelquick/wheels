@@ -99,7 +99,7 @@ export function drawHud(ctx, w, h, game) {
   ctx.fillStyle = 'rgba(255,255,255,0.55)';
   ctx.font = '11px ui-sans-serif, system-ui, sans-serif';
   ctx.fillText(
-    '↑ trampa   ↓ broms/back   ← → luta   CTRL släpp händer   SKIFT släpp fötter   MELLANSLAG hoppa av   Z slowmo   M ljud   R om   N nästa',
+    '↑ gasa / rotera bakåt   ↓ bromsa / rotera framåt   ← → luta   MELLANSLAG hoppa av   R om   N nästa   M ljud',
     16, h - 24,
   );
 }

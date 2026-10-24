@@ -14,6 +14,7 @@ export function createBot(g) {
   const releaseAll = () => Object.keys(CODES).forEach((k) => press(k, false));
 
   let raf = 0;
+  let airTime = 0;
 
   function controller() {
     const f = g.bike.frame;
@@ -21,14 +22,19 @@ export function createBot(g) {
     const spin = f.angvel();
     const grounded = g.grounded();
 
-    // A human brakes on a long descent instead of pedalling into the bottom
-    // of it at 70 km/h. The bot has to do the same or it is not a fair test.
+    // Mirrors the bike's own coyote window: short hops still count as ground,
+    // so the throttle is not dropped on every bump.
+    airTime = grounded ? 0 : airTime + 1 / 60;
+    const driving = airTime < 0.17;
+
     const v = f.linvel();
     const speed = Math.hypot(v.x, v.y);
-    press('up', speed < 13.5);
-    press('down', speed > 15.5);
 
-    if (grounded) {
+    if (driving) {
+      // A human brakes on a long descent instead of pedalling into the bottom
+      // of it at 70 km/h; the bot has to do the same to be a fair test.
+      press('up', speed < 13.5);
+      press('down', speed > 15.5);
       // On the ground the bike should follow the slope, so leaning is only for
       // recovering from a flip. Steering towards level here fights every climb.
       press('left', rot < -1.0);
@@ -36,10 +42,13 @@ export function createBot(g) {
       return;
     }
 
-    // Airborne: aim slightly nose-up so it lands on the rear wheel first.
+    // Airborne: up and down now rotate. Aim slightly nose-up so it lands on
+    // the rear wheel first.
     const err = (rot - 0.05) + spin * 0.25;
-    press('left', err < -0.06);
-    press('right', err > 0.06);
+    press('up', err < -0.06);
+    press('down', err > 0.06);
+    press('left', false);
+    press('right', false);
   }
 
   return {

@@ -32,6 +32,7 @@ const BRAKE_TORQUE = 260;
 const LEAN_TORQUE = 300;
 const MAX_SPEED = 11.5;     // m/s, about 41 km/h
 const SPIN_LIMIT = 55;      // rad/s, stops a free wheel revving to infinity
+const COYOTE = 0.17;        // s of air that still counts as ground
 const ANTI_LOOP = 70;       // N*m per rad/s of nose-lift while pedalling
 
 export class Bike {
@@ -97,6 +98,7 @@ export class Bike {
     this.front = this.wheels[1].body;
     // Hazards chew the bike itself; at zero the riders are no longer attached.
     this.integrity = 100;
+    this.airTime = 0;
   }
 
   point(key) {
@@ -122,10 +124,25 @@ export class Bike {
   }
 
   control(input, dt, contacts = { rear: true, front: true }) {
-    const grounded = contacts.rear || contacts.front;
-    const pedal = input.down('up') ? 1 : 0;
-    const brake = input.down('down') ? 1 : 0;
-    const lean = (input.down('left') ? 1 : 0) - (input.down('right') ? 1 : 0);
+    const touching = contacts.rear || contacts.front;
+    this.airTime = touching ? 0 : this.airTime + dt;
+    // Brief hops still count as grounded. Without this the throttle cuts out
+    // on every bump, because the drive keys change meaning the instant a wheel
+    // leaves the ground. A real jump lasts far longer than this window.
+    const grounded = this.airTime < COYOTE;
+
+    const up = input.down('up') ? 1 : 0;
+    const down = input.down('down') ? 1 : 0;
+
+    // Two keys do both jobs. On the ground they drive; off it they rotate.
+    // You never need to pedal mid-flight, so nothing is lost by overloading
+    // them, and the whole game becomes playable with up and down alone.
+    const pedal = grounded ? up : 0;
+    const brake = grounded ? down : 0;
+    const airLean = grounded ? 0 : up - down;
+
+    const manualLean = (input.down('left') ? 1 : 0) - (input.down('right') ? 1 : 0);
+    const lean = Math.max(-1, Math.min(1, airLean + manualLean));
 
     if (pedal && this.speed() < MAX_SPEED) {
       // Top speed is capped on how fast the BIKE is going, not on how fast the

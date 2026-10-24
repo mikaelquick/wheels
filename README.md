@@ -14,18 +14,30 @@ npm run build    # statiskt bygge i dist/
 
 ## Kontroller
 
+Två knappar räcker. ↑ och ↓ byter betydelse beroende på om du står på marken
+eller flyger:
+
+| Tangent | På marken | I luften |
+|---|---|---|
+| ↑ / W | gasa | rotera bakåt |
+| ↓ / S | bromsa, backa när du står still | rotera framåt |
+
 | Tangent | Gör |
 |---|---|
-| ↑ / W | trampa |
-| ↓ / S | bromsa, och backa när du står still |
-| ← → | luta cykeln — enda flygkontrollen, och biter hårdare i luften |
-| CTRL | släpp / greppa styret |
-| SKIFT | släpp / greppa pedalerna |
-| MELLANSLAG | hoppa av cykeln |
-| Z | slowmotion |
-| M | ljud av/på |
+| ← → | luta — finjustering, funkar alltid |
+| MELLANSLAG | hoppa av cykeln (enkelriktat) |
 | R | börja om banan |
 | N | nästa bana |
+| M | ljud av/på |
+
+Originalets Happy Wheels använder fler knappar än så — Z för att kasta sig av,
+plus Space, Shift och Ctrl till figurspecifika handlingar som byter betydelse
+när du väl åkt av. Det är en välkänd invändning mot spelet, inte något att
+kopiera. Här gör gas och broms samma jobb i luften, eftersom man aldrig behöver
+trampa mitt i ett hopp.
+
+Greppet om styret sköter sig självt och brister när den arm som håller i tar
+tillräckligt med stryk — det finns ingen knapp för det, precis som i originalet.
 
 ## Stack
 
@@ -78,6 +90,10 @@ hjul spinner loss, vilket strandar dig i varje backe.
 enkelriktad dämpning på rotationen, men bara när ena hjulet faktiskt är i
 luften — en konstant motkraft motarbetar varje ramp och slänger dig över styret.
 
+**Korta hopp måste räknas som mark.** Gas och lutning ligger på samma knappar,
+så utan en liten tröghet (`COYOTE`, 0,17 s) tappar du dragkraften vid varje
+guppa. Ett riktigt hopp varar mycket längre än så.
+
 **En åkare fastspänd i en hel cykel är nästan oskadlig** — ramen tar allt.
 Därför har cykeln `integrity`: hinder tuggar sönder den, och vid noll kastas
 alla av. Utan det är spikgropar helt ofarliga.
@@ -100,6 +116,8 @@ upptäcktes genom att autopiloten fastnade på exakt samma ställe varje gång.
   dig där är en fälla, inte ett hinder.
 * **Minor bara där man flyger över dem.** Utan sidledsstyrning är en mina på
   körlinjen ingen utmaning utan ett myntkast.
+* **Landningskanten måste ligga lägre än avfartskanten.** Annars ber hoppet dig
+  att fortfarande stiga när du kommer fram.
 * **Lådor ska vara lätta** (`density` ~26). Tunga lådor är vägspärrar.
 
 ## Nya banor

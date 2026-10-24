@@ -4,10 +4,7 @@ const KEYS = {
   ArrowLeft: 'left', KeyA: 'left',
   ArrowRight: 'right', KeyD: 'right',
   Space: 'eject',
-  ControlLeft: 'hands', ControlRight: 'hands',
-  ShiftLeft: 'feet', ShiftRight: 'feet',
   KeyR: 'restart',
-  KeyZ: 'slowmo',
   KeyN: 'next',
   KeyM: 'mute',
 };

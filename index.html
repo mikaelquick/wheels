@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Niclas Wheels</title>
+  <style>
+    html, body { margin: 0; height: 100%; overflow: hidden; background: #11131a; }
+    canvas { display: block; }
+    #loading {
+      position: fixed; inset: 0; display: grid; place-items: center;
+      color: #cdd3dd; font: 600 18px ui-sans-serif, system-ui, sans-serif;
+      letter-spacing: .04em;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="game"></canvas>
+  <div id="loading">LADDAR NICLAS…</div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

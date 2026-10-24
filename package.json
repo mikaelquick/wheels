@@ -1,0 +1,18 @@
+{
+  "name": "happy-niclas",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "deploy": "npm run build && node scripts/deploy-pages.mjs"
+  },
+  "dependencies": {
+    "@dimforge/rapier2d-compat": "^0.21.0"
+  },
+  "devDependencies": {
+    "vite": "^8.3.5"
+  }
+}

@@ -1,5 +1,7 @@
 # Niclas Wheels
 
+**Spela: https://mikaelquick.github.io/wheels/**
+
 En Happy Wheels-liknande 2D ragdoll-fysikleksak. Pappa Niclas cyklar med Lille
 Niclas på pakethållaren. Alla människor har Niclas ansikte. Tre banor, allihop
 genomspelade och klarade innan de checkades in.
@@ -152,3 +154,20 @@ någonsin spelar roll — då laddas `.wasm` som en separat fil.
 
 `base: './'` i `vite.config.js` gör att bygget fungerar både i roten och under
 en underkatalog, vilket GitHub Pages kräver.
+
+## Deploy
+
+```bash
+npm run deploy     # bygger och pushar dist/ till gh-pages
+```
+
+Pages serveras från grenen `gh-pages`. Deployen görs för hand eftersom den
+GitHub-token som fanns till hands saknade `workflow`-scope och därför inte fick
+lägga upp en Actions-fil. Vill du ha automatisk deploy vid varje push:
+
+```bash
+gh auth refresh -s workflow
+```
+
+…och lägg sedan tillbaka en `.github/workflows/deploy.yml` som bygger och kör
+`actions/deploy-pages`. Då kan `npm run deploy` och den här sektionen tas bort.
